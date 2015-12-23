@@ -2,13 +2,16 @@
 Author: Shankun Lin
 Date: Nov, 2015
 Description:
-	Contains constant values to be used
+	This file contains the constant codes being used throughout the 
+	dispensing routine as well as the ERROR dictionary that maps error
+	codes to string descriptions.
 
 ***THE VALUES IN THIS CODE SHOULD NOT BE DIRECTLY MODIFY!***
 
 """
 
-
+#Communication protocol code. These code should reflect the code
+#in the trinket code, located in Pro_Trinket_Code/dispenser_unit.ino
 KNOCK_KNOCK = 200
 WHOS_THERE = 210
 DISPENSER_COMPLETE = 220
@@ -28,7 +31,7 @@ CONNECTION_LOST = -1010101
 ERROR = {
 	NO_ONE_HOME : "Expected container did not respond to knock request.",
 	WRONG_ANSWER : "Container returned the wrong response.",
-	LOCATION_UNKNOWN : "There was an error with the container.",
+	LOCATION_UNKNOWN : "There was an unknown error with the container.",
 	UNEXPECTED_ERROR_CODE : "The thread communicating with the container threw an unexpected error.",
 	CONNECTION_LOST : "Connection lost with container during operation"
 }
