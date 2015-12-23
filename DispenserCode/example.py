@@ -1,35 +1,42 @@
 import RPi.GPIO as GPIO
 import PinManager as PMan
 import time
+import Dispensing as DispRoute
 import CONSTANTS as CONST
-import Dispensing as DP
+
 
 try:
-	PMan.setLEDState("READY")
-	time.sleep(0.5)
-	while(PMan.getButton()): #While button is not pressed do nothing
-		continue
-	PMan.setLEDState("BUSY")
-	
-	allAddresses = DP.scanForAll() #fetch all available container addresses
-	if(len(allAddresses) > 0):
-		for addr in allAddresses:
-			allAddresses[addr] = 5 #sets a dummy value of 5
+	while(True):
+		time.sleep(0.5) #button debouncing
 		
-		results = DP.startDispensing(allAddresses)
+		print "READY...."
+		PMan.setLEDState("READY")
 		
-		for addr in results:
-				if (results[addr] in CONST.ERROR.keys()):
-					print "Device", addr, ": ", CONST.ERROR[results[addr]]
-				elif(results[addr] == 0):
+		while(PMan.getButton()): #While button is not pressed do nothing
+			continue
+		
+		print "BUSY..."
+		PMan.setLEDState("BUSY")
+
+		addresses = DispRoute.scanForAll()
+		
+		if(len(addresses) > 0):
+			for addr in addresses:
+				addresses[addr] = 3
+
+			devices = DispRoute.startDispensing(addresses)
+
+			for addr in devices:
+				if (devices[addr] in CONST.ERROR.keys()):
+					print "Device", addr, ": ", CONST.ERROR[devices[addr]]
+				elif(devices[addr] == 0):
 					print "Device", addr, ": Dispense succesfull"
-				elif(results[addr] == None):
+				elif(devices[addr] == None):
 					print "Device", addr, ": Invalid number of dosage"
 				else:
-					print "Device", addr, ": Failed to dispense ", results[addr], " pills"
-				results[addr] = None
-		
-	else:
-		print "No containers found!
+					print "Device", addr, ": Failed to dispense ", devices[addr], " pills"
+				devices[addr] = None
+		else:
+			print "No devices found!\n"
 finally:
 	PMan.cleanup()
