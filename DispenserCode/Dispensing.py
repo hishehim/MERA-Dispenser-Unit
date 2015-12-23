@@ -105,13 +105,15 @@ def startDispensing(devices):
 	results = {}
 
 	for addr in devices:
-		results.update({addr : None})
+		results.update({addr : None}) #create a thread per address, aka, container 
 		threads.append(threading.Thread(target=containerDispenseThread, args=(results,addr,devices[addr])))
 	#fetch dosage from container list
 	
+	#begin all threads
 	for i in range (len(threads)):
-		threads[i].start()
+		threads[i].start() 
 	
+	#wait for completion status from all threads
 	for i in range(len(threads)):
 		threads[i].join()
 	
